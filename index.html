@@ -52,14 +52,29 @@
             padding: 10px; /* Отступы вокруг текста */
             border-radius: 5px; /* Скругление углов фона */
         }
+        #message {
+            display: none; /* Скрыто по умолчанию */
+            font-size: 32px;
+            color: black;
+            position: absolute;
+            top: -100px; /* Начальное положение надписи (выше экрана) */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2; /* Над остальными элементами */
+            background-color: rgba(255, 255, 255, 0.7); /* Фон с прозрачностью */
+            padding: 10px; /* Отступы вокруг текста */
+            border-radius: 5px; /* Скругление углов фона */
+            transition: top 1s ease; /* Плавный переход для перемещения */
+        }
     </style>
 </head>
 <body>
     <div class="background"></div> <!-- Размытый фон -->
     <div class="content"> <!-- Контейнер для текста и изображения -->
-        <h1>СпоттиКоин</h1> <!-- Изменено на "СпоттиКоин" -->
+        <h1>СпоттиКоин</h1>
         <img id="clickImage" src="https://vkklub.ru/_data/stickers/spotty/sticker_vk_spotty_003.png" alt="Кликни!" onclick="handleClick()"/>
         <div id="clicksCount">0 СпоттиКоинов</div> <!-- Изменено на "СпоттиКоинов" -->
+        <div id="message">УМНИЧКААА МОЯЯ!</div> <!-- Сообщение для достижения 1000 кликов -->
     </div>
 
     <script>
@@ -81,6 +96,25 @@
             setTimeout(() => {
                 image.style.transform = 'scale(1)';
             }, 100);
+
+            // Проверка достижения 1000 кликов
+            if (clicks === 1000) {
+                showMessage();
+            }
+        }
+
+        // Функция для отображения сообщения
+        function showMessage() {
+            const message = document.getElementById('message');
+            message.style.display = 'block'; // Показываем сообщение
+            message.style.top = '20px'; // Перемещаем сообщение вниз
+
+            setTimeout(() => {
+                message.style.top = '-100px'; // Возвращаем сообщение обратно
+                setTimeout(() => {
+                    message.style.display = 'none'; // Скрываем сообщение через 1 секунду
+                }, 1000); // Время, через которое сообщение будет скрыто
+            }, 2000); // Время, на которое сообщение будет видно
         }
 
         // Инициализация Telegram Web App API

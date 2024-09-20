@@ -12,24 +12,28 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            background-image: url('https://avatars.mds.yandex.net/i?id=15dbdf7e025003862eee3e39534fad95_l-5232207-images-thumbs&n=13'); /* Замените на URL вашего фона */
+            background-size: cover; /* Подгоняет фон под размеры экрана */
+            background-position: center; /* Центрирует фон */
         }
         h1 {
             margin-bottom: 20px;
+            color: white; /* Цвет текста заголовка */
         }
-        #clickButton {
-            padding: 10px 20px;
-            font-size: 20px;
-            cursor: pointer;
+        #clickImage {
+            width: 150px; /* Ширина изображения, настройте по желанию */
+            cursor: pointer; /* Указатель при наведении */
         }
         #clicksCount {
             margin-top: 20px;
             font-size: 24px;
+            color: white; /* Цвет текста счетчика кликов */
         }
     </style>
 </head>
 <body>
     <h1>Кликер</h1>
-    <button id="clickButton">Кликни!</button>
+    <img id="clickImage" src="https://vkklub.ru/_data/stickers/spotty/sticker_vk_spotty_003.png" alt="Кликни!" onclick="handleClick()"/> <!-- Замените на URL вашего изображения -->
     <div id="clicksCount">0 кликов</div>
 
     <script>
@@ -40,11 +44,11 @@
             document.getElementById('clicksCount').innerText = clicks + ' кликов';
         }
 
-        // Обработка нажатия на кнопку
-        document.getElementById('clickButton').addEventListener('click', function() {
+        // Обработка нажатия на изображение
+        function handleClick() {
             clicks++;
             updateClicks();
-        });
+        }
 
         // Инициализация Telegram Web App API
         const tg = window.Telegram.WebApp;

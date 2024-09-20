@@ -1,2 +1,1 @@
-# TelegramClickerBot
-Телеграм кликер бот
+

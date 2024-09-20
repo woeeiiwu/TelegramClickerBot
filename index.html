@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Clicker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #clickButton {
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #clicksCount {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Кликер</h1>
+    <button id="clickButton">Кликни!</button>
+    <div id="clicksCount">0 кликов</div>
+
+    <script>
+        let clicks = 0;
+
+        // Функция для обновления интерфейса
+        function updateClicks() {
+            document.getElementById('clicksCount').innerText = clicks + ' кликов';
+        }
+
+        // Обработка нажатия на кнопку
+        document.getElementById('clickButton').addEventListener('click', function() {
+            clicks++;
+            updateClicks();
+        });
+
+        // Инициализация Telegram Web App API
+        const tg = window.Telegram.WebApp;
+        tg.expand();  // Расширяет Web App на весь экран
+
+        // Отправка данных кликов обратно боту
+        tg.onEvent('mainButtonClicked', function() {
+            tg.sendData(JSON.stringify({ clicks }));
+        });
+
+        tg.MainButton.setText("Отправить клики");
+        tg.MainButton.show();
+    </script>
+</body>
+</html>

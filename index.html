@@ -1,47 +1,133 @@
-import logging
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
-from aiogram.fsm.storage.memory import MemoryStorage
-import asyncio
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Clicker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden; /* Скрывает прокрутку */
+        }
+        .background {
+            position: absolute; /* Фон занимает всю область */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://avatars.mds.yandex.net/i?id=15dbdf7e025003862eee3e39534fad95_l-5232207-images-thumbs&n=13');
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px); /* Размытие фона */
+            z-index: 0; /* Фон под остальными элементами */
+        }
+        .content {
+            position: relative; /* Относительное позиционирование для четких элементов */
+            z-index: 1; /* Содержимое над фоном */
+            text-align: center; /* Центрирование текста */
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.7); /* Фон с прозрачностью */
+            padding: 10px; /* Отступы вокруг текста */
+            border-radius: 5px; /* Скругление углов фона */
+        }
+        #clickImage {
+            width: 150px;
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+        #clicksCount {
+            margin-top: 20px;
+            font-size: 24px;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.7); /* Фон с прозрачностью */
+            padding: 10px; /* Отступы вокруг текста */
+            border-radius: 5px; /* Скругление углов фона */
+        }
+        #message {
+            display: none; /* Скрыто по умолчанию */
+            font-size: 32px;
+            color: black;
+            position: absolute;
+            top: -100px; /* Начальное положение надписи (выше экрана) */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2; /* Над остальными элементами */
+            background-color: rgba(255, 255, 255, 0.7); /* Фон с прозрачностью */
+            padding: 10px; /* Отступы вокруг текста */
+            border-radius: 5px; /* Скругление углов фона */
+            transition: top 1s ease; /* Плавный переход для перемещения */
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div> <!-- Размытый фон -->
+    <div class="content"> <!-- Контейнер для текста и изображения -->
+        <h1>СпоттиКоин</h1>
+        <img id="clickImage" src="https://vkklub.ru/_data/stickers/spotty/sticker_vk_spotty_003.png" alt="Кликни!" onclick="handleClick()"/>
+        <div id="clicksCount">0 СпоттиКоинов</div> <!-- Изменено на "СпоттиКоинов" -->
+        <div id="message">УМНИЧКААА МОЯЯ!</div> <!-- Сообщение для достижения 1000 кликов -->
+    </div>
 
-# Токен вашего бота
-API_TOKEN = '7846958905:AAG0TYKsWhsja25sXRj0suDJYzo1rAhiD1U'
+    <script>
+        let clicks = 0;
 
-# Настройка логирования
-logging.basicConfig(level=logging.INFO)
+        // Функция для обновления интерфейса
+        function updateClicks() {
+            document.getElementById('clicksCount').innerText = clicks + ' СпоттиКоинов'; // Изменено на "СпоттиКоинов"
+        }
 
-# Инициализация бота и диспетчера
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(storage=MemoryStorage())
+        // Обработка нажатия на изображение
+        function handleClick() {
+            clicks++;
+            updateClicks();
 
-# Обработка команды /start
-@dp.message(Command("start"))
-async def send_welcome(message: types.Message):
-    # Кнопка с Web App
-    web_app_button = types.InlineKeyboardButton(
-        text="Нажимать своей кошачей лапкой", 
-        web_app=types.WebAppInfo(url="https://woeeiiwu.github.io/TelegramClickerBot/")  # Укажите URL вашего веб-приложения
-    )
-    
-    # Создание клавиатуры с кнопкой
-    keyboard = types.InlineKeyboardMarkup(inline_keyboard=[[web_app_button]])
-    
-    # URL изображения (можете заменить на свой)
-    image_url = "https://avatars.mds.yandex.net/i?id=e01f499e47230324fe92d1db456f449a_l-5288660-images-thumbs&n=13"  # Замените на URL вашего изображения
+            const image = document.getElementById('clickImage');
+            image.style.transform = 'scale(1.2)';
 
-    # Отправка фото с текстом
-    await bot.send_photo(chat_id=message.chat.id, photo=image_url, caption="Привет солнышко это короче СпоттиКоин хывпхвызпыв, можешь играть в него, но к сожалению я не могу пока сделать что бы коины сохранялись после выхода, так что это так, прикольчик чисто.", reply_markup=keyboard)
+            setTimeout(() => {
+                image.style.transform = 'scale(1)';
+            }, 100);
 
-# Главная функция запуска бота
-async def main():
-    if API_TOKEN == 'YOUR_BOT_API_TOKEN':
-        logging.error("Токен бота не установлен. Проверьте переменную API_TOKEN.")
-        return
+            // Проверка достижения 1000 кликов
+            if (clicks === 1000) {
+                showMessage();
+            }
+        }
 
-    try:
-        await dp.start_polling(bot)
-    except Exception as e:
-        logging.error(f"Ошибка запуска бота: {e}")
+        // Функция для отображения сообщения
+        function showMessage() {
+            const message = document.getElementById('message');
+            message.style.display = 'block'; // Показываем сообщение
+            message.style.top = '20px'; // Перемещаем сообщение вниз
 
-if __name__ == '__main__':
-    asyncio.run(main())
+            setTimeout(() => {
+                message.style.top = '-100px'; // Возвращаем сообщение обратно
+                setTimeout(() => {
+                    message.style.display = 'none'; // Скрываем сообщение через 1 секунду
+                }, 1000); // Время, через которое сообщение будет скрыто
+            }, 2000); // Время, на которое сообщение будет видно
+        }
+
+        // Инициализация Telegram Web App API
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Отправка данных кликов обратно боту
+        tg.onEvent('mainButtonClicked', function() {
+            tg.sendData(JSON.stringify({ clicks }));
+        });
+
+        tg.MainButton.setText("Отправить СпоттиКоины"); // Изменено на "СпоттиКоины"
+        tg.MainButton.show();
+    </script>
+</body>
+</html>

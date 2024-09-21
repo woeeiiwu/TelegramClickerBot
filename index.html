@@ -78,7 +78,7 @@
     </div>
 
     <script>
-        let clicks = 0;
+        let clicks = parseInt(localStorage.getItem('clicks')) || 0; // Сохраняем начальное количество кликов
 
         // Функция для обновления интерфейса
         function updateClicks() {
@@ -120,31 +120,25 @@
             }, 2000);
         }
 
-        // Инициализация Telegram Web App API
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+        // Проверка доступности Telegram Web App API
+        if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
 
-        // Получение параметров из URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialClicks = parseInt(urlParams.get('clicks')) || 0;
-        clicks = initialClicks;
+            // Отправка данных кликов обратно боту
+            tg.onEvent('mainButtonClicked', function() {
+                console.log('Отправляем данные кликов:', clicks); // Логирование
+                tg.sendData(JSON.stringify({ clicks })); // Отправляем количество кликов
+            });
 
-        // Если в localStorage есть сохранённые клики, восстанавливаем их
-        const savedClicks = localStorage.getItem('clicks');
-        if (savedClicks !== null) {
-            clicks = parseInt(savedClicks);
+            tg.MainButton.setText("Отправить СпоттиКоины");
+            tg.MainButton.show();
+        } else {
+            console.error("Telegram Web App API не доступен. Убедитесь, что приложение открыто в Telegram.");
         }
 
+        // Обновляем интерфейс после загрузки
         updateClicks();
-
-        // Отправка данных кликов обратно боту
-        tg.onEvent('mainButtonClicked', function() {
-            console.log('Отправляем данные кликов:', clicks); // Логирование
-            tg.sendData(JSON.stringify({ clicks })); // Отправляем количество кликов
-        });
-
-        tg.MainButton.setText("Отправить СпоттиКоины");
-        tg.MainButton.show();
     </script>
 </body>
 </html>

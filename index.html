@@ -121,9 +121,15 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Получение параметров из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialClicks = parseInt(urlParams.get('clicks')) || 0;
+        clicks = initialClicks; // Устанавливаем начальное количество кликов
+        updateClicks(); // Обновляем интерфейс с учётом переданных данных
+
         // Отправка данных кликов обратно боту
         tg.onEvent('mainButtonClicked', function() {
-            tg.sendData(JSON.stringify({ clicks }));
+            tg.sendData(JSON.stringify({ clicks })); // Отправляем количество кликов
         });
 
         tg.MainButton.setText("Отправить СпоттиКоины"); // Изменено на "СпоттиКоины"

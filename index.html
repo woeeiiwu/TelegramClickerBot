@@ -139,6 +139,7 @@
 
         // Отправка данных кликов обратно боту
         tg.onEvent('mainButtonClicked', function() {
+            console.log('Отправляем данные кликов:', clicks); // Логирование
             tg.sendData(JSON.stringify({ clicks })); // Отправляем количество кликов
         });
 
